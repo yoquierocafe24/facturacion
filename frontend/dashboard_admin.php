@@ -18,7 +18,7 @@ if($_SESSION['rol'] !== "Administrador"){
 <div class="d-flex">
 
     <!-- SIDEBAR -->
-    <div class="bg-dark text-white p-3" style="width:250px; min-height:100vh;">
+    <div class="text-white p-3" style="width:250px; min-height:100vh; background-color: #0d3b66;">
         <h4>Panel Admin</h4>
         <hr>
 
@@ -58,7 +58,7 @@ if($_SESSION['rol'] !== "Administrador"){
         <div class="row mt-4">
 
             <div class="col-md-4">
-                <div class="card text-white bg-primary shadow">
+                <div class="card text-white shadow-lg border-0" style="background-color: #1d4e89;">
                     <div class="card-body">
                         <h5>Total Facturas</h5>
                         <h3 id="totalFacturas">0</h3>
@@ -67,7 +67,7 @@ if($_SESSION['rol'] !== "Administrador"){
             </div>
 
             <div class="col-md-4">
-                <div class="card text-white bg-success shadow">
+               <div class="card text-white shadow-lg border-0" style="background-color: #2563a6">
                     <div class="card-body">
                         <h5>Total Productos</h5>
                         <h3 id="totalProductos">0</h3>
@@ -81,8 +81,8 @@ if($_SESSION['rol'] !== "Administrador"){
         <div class="mt-5">
             <h4>Personas con Facturas Pendientes</h4>
 
-            <table class="table table-bordered mt-3">
-                <thead class="table-dark">
+           <table class="table table-bordered mt-3">
+             <thead style="background-color: #0d3b66; color: white;">
                     <tr>
                         <th>Cliente</th>
                         <th>Teléfono</th>

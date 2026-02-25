@@ -18,9 +18,10 @@ $cedula = $data['cedula'];
 $telefono = $data['telefono'];
 $email = $data['email'];
 $direccion = $data['direccion'];
+$rtn= $data['rtn'];
 
-$stmt = $conn->prepare("INSERT INTO clientes (nombre, cedula, telefono, email, direccion) VALUES (?, ?, ?, ?, ?)");
-$stmt->bind_param("sssss", $nombre, $cedula, $telefono, $email, $direccion);
+$stmt = $conn->prepare("INSERT INTO clientes (nombre, cedula, telefono, email, direccion, rtn) VALUES (?, ?, ?, ?, ?, ?)");
+$stmt->bind_param("sssss", $nombre, $cedula, $telefono, $email, $direccion, $rtn);
 
 if ($stmt->execute()) {
     echo json_encode(["mensaje" => "Cliente creado"]);

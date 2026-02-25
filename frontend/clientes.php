@@ -21,7 +21,7 @@ if($_SESSION['rol'] !== "Administrador"){
 <div class="d-flex">
 
     <!-- SIDEBAR -->
-    <div class="bg-dark text-white p-3" style="width:250px; min-height:100vh;">
+     <div class="text-white p-3" style="width:250px; min-height:100vh; background-color: #0d3b66;">
         <h4>Panel Admin</h4>
         <hr>
 
@@ -54,9 +54,10 @@ if($_SESSION['rol'] !== "Administrador"){
 
         <div class="d-flex justify-content-between align-items-center">
             <h2>Gestión de Clientes</h2>
-            <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#formCollapse">
-                + Nuevo Cliente
-            </button>
+           <button class="btn text-white" style="background-color: #0d3b66;" data-bs-toggle="collapse" 
+        data-bs-target="#formCollapse">
+    + Nuevo Cliente
+</button>
         </div>
 
         <!-- FORMULARIO -->
@@ -81,9 +82,13 @@ if($_SESSION['rol'] !== "Administrador"){
                         <div class="col-md-8">
                             <input type="text" id="direccion" placeholder="Dirección" class="form-control mb-2">
                         </div>
+                        <div class="col-md-4">
+                            <input type="text" id="rtn" placeholder="RTN" class="form-control mb-2">
+                        </div>
                     </div>
 
-                    <button class="btn btn-success">Guardar Cliente</button>
+                   <button class="btn text-white" style="background-color: #0d3b66;">
+                    Guardar Cliente </button>
                 </form>
             </div>
         </div>
@@ -91,8 +96,8 @@ if($_SESSION['rol'] !== "Administrador"){
         <!-- TABLA -->
         <div class="card shadow mt-4">
             <div class="card-body">
-                <table class="table table-hover table-bordered align-middle">
-                    <thead class="table-dark">
+              <table class="table table-bordered mt-3">
+             <thead style="background-color: #0d3b66; color: white;">
                         <tr>
                             <th>Nombre</th>
                             <th>Cédula</th>
@@ -150,7 +155,8 @@ document.getElementById("formCliente").addEventListener("submit", function(e){
         cedula: cedula.value,
         telefono: telefono.value,
         email: email.value,
-        direccion: direccion.value
+        direccion: direccion.value,
+        rtn: rtn.value
     };
 
     let url = id ? "actualizar.php" : "insertar.php";
@@ -176,6 +182,7 @@ function editar(cliente) {
     telefono.value = cliente.telefono;
     email.value = cliente.email;
     direccion.value = cliente.direccion;
+    rtn.value = cliente.rtn;
 }
 
 function eliminar(id) {

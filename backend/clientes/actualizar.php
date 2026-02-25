@@ -9,12 +9,13 @@ $cedula = $data['cedula'];
 $telefono = $data['telefono'];
 $email = $data['email'];
 $direccion = $data['direccion'];
+$rtn = $data['rtn'];
 
 $stmt = $conn->prepare("UPDATE clientes 
-SET nombre=?, cedula=?, telefono=?, email=?, direccion=? 
+SET nombre=?, cedula=?, telefono=?, email=?, direccion=?, rtn=?
 WHERE id_cliente=?");
 
-$stmt->bind_param("sssssi", $nombre, $cedula, $telefono, $email, $direccion, $id);
+$stmt->bind_param("sssssi", $nombre, $cedula, $telefono, $email, $direccion, $rtn, $id);
 
 if ($stmt->execute()) {
     echo json_encode(["mensaje" => "Cliente actualizado"]);
