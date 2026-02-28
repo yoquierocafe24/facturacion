@@ -11,20 +11,41 @@ if(!$data){
     exit;
 }
 
-$data = json_decode(file_get_contents("php://input"), true);
-
 $nombre = $data['nombre'];
 $cedula = $data['cedula'];
 $telefono = $data['telefono'];
 $email = $data['email'];
 $direccion = $data['direccion'];
+$rtn = isset($data['rtn']) ? $data['rtn'] : ""; // R.T.N. opcional
 
-$stmt = $conn->prepare("INSERT INTO clientes (nombre, cedula, telefono, email, direccion) VALUES (?, ?, ?, ?, ?)");
-$stmt->bind_param("sssss", $nombre, $cedula, $telefono, $email, $direccion);
+// 1️ Revisar si ya existe cliente por cédula o R.T.N.
+$stmt = $conn->prepare("SELECT id_cliente, estado FROM clientes WHERE cedula = ? OR rtn = ?");
+$stmt->bind_param("ss", $cedula, $rtn);
+$stmt->execute();
+$result = $stmt->get_result();
 
-if ($stmt->execute()) {
-    echo json_encode(["mensaje" => "Cliente creado"]);
+if($cliente = $result->fetch_assoc()){
+    if($cliente['estado'] == 0){
+        // 2️ Cliente existe pero estaba inactivo → reactivarlo y actualizar datos
+        $stmt = $conn->prepare("UPDATE clientes SET nombre=?, telefono=?, email=?, direccion=?, rtn=?, estado=1 WHERE id_cliente=?");
+        $stmt->bind_param("sssssi", $nombre, $telefono, $email, $direccion, $rtn, $cliente['id_cliente']);
+        if($stmt->execute()){
+            echo json_encode(["mensaje" => "Cliente reactivado y actualizado"]);
+        } else {
+            echo json_encode(["error" => "Error al reactivar cliente"]);
+        }
+    } else {
+        // 3️ Cliente ya existe activo → no duplicar
+        echo json_encode(["error" => "El cliente ya existe"]);
+    }
 } else {
-    echo json_encode(["error" => "Error al crear"]);
+    // 4️ Cliente no existe → insertar normalmente
+    $stmt = $conn->prepare("INSERT INTO clientes (nombre, cedula, telefono, email, direccion, rtn, estado) VALUES (?, ?, ?, ?, ?, ?, 1)");
+    $stmt->bind_param("ssssss", $nombre, $cedula, $telefono, $email, $direccion, $rtn);
+    if ($stmt->execute()) {
+        echo json_encode(["mensaje" => "Cliente creado"]);
+    } else {
+        echo json_encode(["error" => "Error al crear cliente"]);
+    }
 }
 ?>

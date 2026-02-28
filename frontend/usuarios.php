@@ -87,7 +87,7 @@ if($_SESSION['rol'] != "Administrador"){
                         <div class="col-md-4">
                             <select id="id_rol" class="form-control mb-2" required> 
                                 <option value="">Seleccione un Rol</option>
-                                <option value="5">Administrador</option>
+                                <option value="5">Administrador</option> 
                                 <option value="6">Trabajador</option>
                             </select>
                         </div>
