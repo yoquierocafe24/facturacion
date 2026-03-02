@@ -2,6 +2,17 @@
 session_start();
 include "../config/conexion.php";
 
+ if (!isset($_SESSION['intentos'])) {
+    $_SESSION['intentos'] = 0;
+}
+
+if ($_SESSION['intentos'] >= 3) {
+    echo json_encode([
+        "success" => false,
+        "mensaje" => "Demasiados intentos. Intente más tarde."
+    ]);
+    exit();
+}
 $data = json_decode(file_get_contents("php://input"), true);
 
 $usuario = $data['usuario'];

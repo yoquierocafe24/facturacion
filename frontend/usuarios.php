@@ -20,37 +20,55 @@ if($_SESSION['rol'] != "Administrador"){
 
 <div class="d-flex">
 
-    <!-- SIDEBAR -->
-    <div class="text-white p-3" style="width:250px; min-height:100vh; background-color:#0d3b66;">
-        <h4>Panel Admin</h4>
-        <hr>
-
-        <p><strong><?php echo $_SESSION['nombre']; ?></strong></p>
-        <p>Rol: <?php echo $_SESSION['rol']; ?></p>
-
-        <hr>
-
-         <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link text-white" href="dashboard_admin.php">Dashboard</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-warning" href="clientes.php">Clientes</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white" href="#">Productos</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-white" href="#">Facturas</a>
-            </li>
-           <?php if($_SESSION['rol'] == "Administrador"){ ?>
-           <li> <a href="usuarios.php" class="nav-link text-white ">Usuarios</a> </li>
-<?php } ?>
-            <li class="nav-item">
-                <a class="nav-link text-danger" href="../backend/auth/logout.php">Cerrar sesión</a>
-            </li>
-        </ul>
+  <!-- SIDEBAR -->
+<div class="text-white p-3" style="width:250px; min-height:100vh; background-color:#0d3b66;">
+    
+    <!-- EMPRESA -->
+    <div class="text-center mb-3">
+        <div style="font-size:2rem;">🪟</div>
+        <h5 class="mb-0 fw-bold">Vidrería George</h5>
+        <small style="color:#a8c7e8;">Sistema de Facturación</small>
     </div>
+
+    <hr style="border-color:#ffffff30;">
+
+    <!-- USUARIO -->
+    <div class="d-flex align-items-center mb-3">
+        <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold me-2"
+             style="width:40px; height:40px; background-color:#1a5276; font-size:1rem;">
+            <?php echo strtoupper(substr($_SESSION['nombre'], 0, 2)); ?>
+        </div>
+        <div>
+            <div class="fw-bold" style="font-size:0.9rem;"><?php echo $_SESSION['nombre']; ?></div>
+            <small style="color:#a8c7e8;"><?php echo $_SESSION['rol']; ?></small>
+        </div>
+    </div>
+
+    <hr style="border-color:#ffffff30;">
+
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link text-white" href="dashboard_admin.php">📊 Dashboard</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-white" href="clientes.php">👥 Clientes</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-white" href="#">📦 Productos</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-white" href="#">🧾 Facturas</a>
+        </li>
+        <?php if($_SESSION['rol'] == "Administrador"){ ?>
+        <li class="nav-item">
+            <a class="nav-link text-white" href="usuarios.php">👤 Usuarios</a>
+        </li>
+        <?php } ?>
+        <li class="nav-item mt-3">
+            <a class="nav-link text-danger" href="../backend/auth/logout.php">🚪 Cerrar sesión</a>
+        </li>
+    </ul>
+</div>
 
     <!-- CONTENIDO -->
     <div class="container-fluid p-4">
@@ -79,6 +97,7 @@ if($_SESSION['rol'] != "Administrador"){
                         <div class="col-md-4">
                             <input type="text" id="usuario" class="form-control mb-2" placeholder="Usuario" required>
                         </div>
+                        
 
                         <div class="col-md-4">
                             <input type="password" id="password" class="form-control mb-2" placeholder="Contraseña" required>
@@ -87,8 +106,8 @@ if($_SESSION['rol'] != "Administrador"){
                         <div class="col-md-4">
                             <select id="id_rol" class="form-control mb-2" required> 
                                 <option value="">Seleccione un Rol</option>
-                                <option value="5">Administrador</option> 
-                                <option value="6">Trabajador</option>
+                                <option value="5">Administrador</option> <!-- 1 -->
+                                <option value="6">Trabajador</option> <!-- 2 -->
                             </select>
                         </div>
                     </div>
@@ -132,52 +151,69 @@ function listarUsuarios(){
 
         let tabla = document.getElementById("tablaUsuarios");
         tabla.innerHTML = "";
-
         data.forEach(u => {
             tabla.innerHTML += `
-                <tr>
-                    <td>${u.nombre}</td>
-                    <td>${u.usuario}</td>
-                    <td>${u.id_rol == 5 ? 'Administrador' : 'Trabajador'}</td>
-                    <td>
-                        <button onclick="eliminar(${u.id_usuario})"
-                                class="btn btn-danger btn-sm">
-                            Eliminar
-                        </button>
-                    </td>
-                </tr>
-            `;
+    <tr>
+        <td>${u.nombre}</td>
+        <td>${u.usuario}</td>
+        <td>${u.id_rol == 5 ? 'Administrador' : 'Trabajador'}</td>  
+        <td class="d-flex  gap-1">
+   <button onclick='editar(${JSON.stringify(u)})'
+        class="btn btn-sm" style="background-color:#2e86c1; color:white;">
+    Editar
+</button>
+<button onclick="eliminar(${u.id_usuario})"
+        class="btn btn-sm" style="background-color:#616a6b; color:white;">
+    Eliminar
+</button>
+    </td>
+    </tr>
+`;
         });
     });
 }
 
 document.getElementById("formUsuario").addEventListener("submit", function(e){
     e.preventDefault();
-    alert("SE ESTA EJECUTANDO EL JS");
+
+    let id = document.getElementById("id_usuario").value;
+    let url = id ? "actualizar.php" : "insertar.php";
 
     let datos = {
-        nombre: document.getElementById("nombre").value,
-        usuario: document.getElementById("usuario").value,
+        id_usuario: id,
+        nombre:   document.getElementById("nombre").value,
+        usuario:  document.getElementById("usuario").value,
         password: document.getElementById("password").value,
-        id_rol: document.getElementById("id_rol").value
+        id_rol:   document.getElementById("id_rol").value
     };
 
-    fetch(API + "insertar.php", {
+    fetch(API + url, {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(datos)
     })
     .then(res => res.json())
-    .then(() => {
-        this.reset();
-        listarUsuarios();
-        bootstrap.Collapse.getOrCreateInstance(
-            document.getElementById("formCollapse")
-        ).hide();
+    .then(data => {
+        alert(data.mensaje || data.error);
+        if(data.mensaje){
+            this.reset();
+            listarUsuarios();
+            bootstrap.Collapse.getOrCreateInstance(
+                document.getElementById("formCollapse")
+            ).hide();
+        }
     });
 });
+function editar(u){
+    document.getElementById("id_usuario").value = u.id_usuario;
+    document.getElementById("nombre").value     = u.nombre;
+    document.getElementById("usuario").value    = u.usuario;
+    document.getElementById("id_rol").value     = u.id_rol;
+
+    bootstrap.Collapse.getOrCreateInstance(
+        document.getElementById("formCollapse")
+    ).show();
+}
 
 function eliminar(id){
     if(confirm("¿Eliminar usuario?")){
@@ -188,9 +224,15 @@ function eliminar(id){
             },
             body: JSON.stringify({id_usuario:id})
         })
-        .then(() => listarUsuarios());
+       .then(res => res.json())
+        .then(data => {
+            alert(data.mensaje || data.error);
+            listarUsuarios();
+        });
     }
 }
+
+
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

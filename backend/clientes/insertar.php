@@ -16,9 +16,9 @@ $cedula = $data['cedula'];
 $telefono = $data['telefono'];
 $email = $data['email'];
 $direccion = $data['direccion'];
-$rtn = isset($data['rtn']) ? $data['rtn'] : ""; // R.T.N. opcional
+$rtn = isset($data['rtn']) ? $data['rtn'] : ""; 
 
-// 1️ Revisar si ya existe cliente por cédula o R.T.N.
+//  Revisar si ya existe cliente por cédula o R.T.N
 $stmt = $conn->prepare("SELECT id_cliente, estado FROM clientes WHERE cedula = ? OR rtn = ?");
 $stmt->bind_param("ss", $cedula, $rtn);
 $stmt->execute();
@@ -26,7 +26,7 @@ $result = $stmt->get_result();
 
 if($cliente = $result->fetch_assoc()){
     if($cliente['estado'] == 0){
-        // 2️ Cliente existe pero estaba inactivo → reactivarlo y actualizar datos
+        // Cliente existe pero estaba inactivo → reactivarlo y actualizar datos
         $stmt = $conn->prepare("UPDATE clientes SET nombre=?, telefono=?, email=?, direccion=?, rtn=?, estado=1 WHERE id_cliente=?");
         $stmt->bind_param("sssssi", $nombre, $telefono, $email, $direccion, $rtn, $cliente['id_cliente']);
         if($stmt->execute()){
@@ -35,11 +35,11 @@ if($cliente = $result->fetch_assoc()){
             echo json_encode(["error" => "Error al reactivar cliente"]);
         }
     } else {
-        // 3️ Cliente ya existe activo → no duplicar
+        //  Cliente ya existe activo → no duplicar
         echo json_encode(["error" => "El cliente ya existe"]);
     }
 } else {
-    // 4️ Cliente no existe → insertar normalmente
+    // Cliente no existe → insertar normalmente
     $stmt = $conn->prepare("INSERT INTO clientes (nombre, cedula, telefono, email, direccion, rtn, estado) VALUES (?, ?, ?, ?, ?, ?, 1)");
     $stmt->bind_param("ssssss", $nombre, $cedula, $telefono, $email, $direccion, $rtn);
     if ($stmt->execute()) {
@@ -48,4 +48,7 @@ if($cliente = $result->fetch_assoc()){
         echo json_encode(["error" => "Error al crear cliente"]);
     }
 }
+
+
+
 ?>
