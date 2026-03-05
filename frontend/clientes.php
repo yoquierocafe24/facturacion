@@ -57,7 +57,7 @@ if($_SESSION['rol'] != "Administrador" && $_SESSION['rol'] != "Trabajador"){
                 <a class="nav-link text-white" href="#">📦 Productos</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white" href="#">🧾 Facturas</a>
+                <a class="nav-link text-white" href="facturar.php">🧾 Facturas</a>
             </li>
             <?php if($_SESSION['rol'] == "Administrador"){ ?>
             <li class="nav-item">

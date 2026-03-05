@@ -57,7 +57,7 @@ if($_SESSION['rol'] != "Administrador"){
             <a class="nav-link text-white" href="#">📦 Productos</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-white" href="#">🧾 Facturas</a>
+            <a class="nav-link text-white" href="facturar.php">🧾 Facturas</a>
         </li>
         <?php if($_SESSION['rol'] == "Administrador"){ ?>
         <li class="nav-item">
@@ -106,8 +106,8 @@ if($_SESSION['rol'] != "Administrador"){
                         <div class="col-md-4">
                             <select id="id_rol" class="form-control mb-2" required> 
                                 <option value="">Seleccione un Rol</option>
-                                <option value="5">Administrador</option> <!-- 1 -->
-                                <option value="6">Trabajador</option> <!-- 2 -->
+                                <option value="1">Administrador</option> <!-- 1 -->
+                                <option value="2">Trabajador</option> <!-- 2 -->
                             </select>
                         </div>
                     </div>
