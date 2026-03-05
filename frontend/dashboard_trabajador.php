@@ -45,17 +45,17 @@ if($_SESSION['rol'] !== "Trabajador"){
     <hr style="border-color:#ffffff30;">
 
     <ul class="nav flex-column">
-        <li class="nav-item">
-            <a class="nav-link text-white" href="#">📊 Dashboard</a>
+       <li class="nav-item">
+            <a class="nav-link text-white" href="dashboard_trabajador.php">📊 Dashboard</a>
         </li>
         <li class="nav-item">
             <a class="nav-link text-white" href="clientes.php">👥 Clientes</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-white" href="#">📦 Productos</a>
+            <a class="nav-link text-white" href="productos.php">📦 Productos</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-white" href="#">🧾 Facturas</a>
+            <a class="nav-link text-white" href="facturar.php">🧾 Facturas</a>
         </li>
         <li class="nav-item mt-3">
             <a class="nav-link text-danger" href="../backend/auth/logout.php">🚪 Cerrar sesión</a>

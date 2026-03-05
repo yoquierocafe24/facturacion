@@ -54,19 +54,29 @@ if($_SESSION['rol'] != "Administrador" && $_SESSION['rol'] != "Trabajador"){
                 <a class="nav-link text-white" href="clientes.php">👥 Clientes</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-white" href="#">📦 Productos</a>
+                <a class="nav-link text-white" href="productos.php">📦 Productos</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link text-white" href="facturar.php">🧾 Facturas</a>
             </li>
+
+                <?php if($_SESSION['rol'] == "Administrador"){ ?>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="historial_facturas.php">📋 Historial</a>
+           </li>
+             <?php } ?>
+
+             
             <?php if($_SESSION['rol'] == "Administrador"){ ?>
             <li class="nav-item">
                 <a class="nav-link text-white" href="usuarios.php">👤 Usuarios</a>
             </li>
             <?php } ?>
+
             <li class="nav-item mt-3">
                 <a class="nav-link text-danger" href="../backend/auth/logout.php">🚪 Cerrar sesión</a>
             </li>
+
         </ul>
     </div>
 

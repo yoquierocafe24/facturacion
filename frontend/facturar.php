@@ -53,16 +53,26 @@ if($_SESSION['rol'] !== "Administrador" && $_SESSION['rol'] !== "Trabajador"){
             <a class="nav-link text-white" href="clientes.php">👥 Clientes</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link text-white" href="#">📦 Productos</a>
+            <a class="nav-link text-white" href="productos.php">📦 Productos</a>
         </li>
         <li class="nav-item">
             <a class="nav-link text-white" href="#">🧾 Facturas</a>
         </li>
+
+          <?php if($_SESSION['rol'] == "Administrador"){ ?>
+          <li class="nav-item">
+              <a class="nav-link text-white" href="historial_facturas.php">📋 Historial</a>
+        </li>
+         <?php } ?>
+
+         
         <?php if($_SESSION['rol'] == "Administrador"){ ?>
         <li class="nav-item">
             <a class="nav-link text-white" href="usuarios.php">👤 Usuarios</a>
         </li>
         <?php } ?>
+
+
         <li class="nav-item mt-3">
             <a class="nav-link text-danger" href="../backend/auth/logout.php">🚪 Cerrar sesión</a>
         </li>
@@ -100,7 +110,7 @@ if($_SESSION['rol'] !== "Administrador" && $_SESSION['rol'] !== "Trabajador"){
             </select>
         </div>
         <div class="col-md-2">
-            <button onclick="agregarProducto()" class="btn btn-primary w-100">
+            <button onclick="agregarProducto()" class="btn btn-primary w-100"  style="background-color:#0d3b66;" >
                 Agregar
             </button>
         </div>
@@ -158,7 +168,7 @@ if($_SESSION['rol'] !== "Administrador" && $_SESSION['rol'] !== "Trabajador"){
     </div>
 </div>
 
-<button onclick="guardarFactura()" class="btn btn-success mt-4 px-4">
+<button onclick="guardarFactura()" class="btn btn-success mt-4 px-4" style="background-color:#0d3b66;" >
     💾 Guardar Factura
 </button>
 
@@ -203,17 +213,26 @@ document.getElementById("producto").addEventListener("change", function(){
     document.getElementById("precio").value = precio;
 });
 
-function agregarProducto(){
+function agregarProducto() {
 
     let prodSelect = document.getElementById("producto");
+    let cantidad = document.getElementById("cantidad").value.trim();
+    let precio = document.getElementById("precio").value.trim();
+    let tipo_isv = document.getElementById("tipo_isv").value;
+
+    // 🔹 Validación de campos obligatorios
+    if (!prodSelect.value || !cantidad || !precio || !tipo_isv) {
+        alert("Por favor complete todos los campos antes de agregar el producto.");
+        return; // ⚠️ detener la función si algo falta
+    }
 
     let producto = {
         id_producto: prodSelect.value,
         nombre: prodSelect.selectedOptions[0].text,
         descripcion: prodSelect.selectedOptions[0].dataset.descripcion,
-        cantidad: parseFloat(cantidad.value),
-        precio: parseFloat(precio.value),
-        tipo_isv: tipo_isv.value
+        cantidad: parseFloat(cantidad),
+        precio: parseFloat(precio),
+        tipo_isv: tipo_isv
     };
 
     productos.push(producto);
@@ -278,6 +297,9 @@ function guardarFactura(){
 
     fetch("../backend/facturas/crear.php",{
         method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
         body: JSON.stringify({
             id_cliente: cliente.value,
             productos: productos
@@ -286,8 +308,20 @@ function guardarFactura(){
     .then(res=>res.json())
     .then(data=>{
         if(data.success){
+
             alert("Factura creada correctamente");
-            location.reload();
+
+            // 🔹 Abrir PDF automáticamente
+            window.open("../backend/facturas/factura_pdf.php?id=" + data.id_factura, "_blank");
+
+            // 🔹 Opcional: limpiar sin recargar
+            // limpiarTabla();
+
+            // 🔹 Si quieres recargar, espera 1 segundo
+            setTimeout(()=>{
+                location.reload();
+            },1000);
+
         }else{
             alert("Error: "+data.error);
         }
