@@ -1,22 +1,20 @@
 <?php
-
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-include "../config/conexion.php";
+include "../../backend/config/conexion.php";
+header("Content-Type: application/json");
 
 $data = json_decode(file_get_contents("php://input"), true);
 
-$nombre = $data['nombre'];
-$precio = $data['precio'];
-$stock = $data['stock'];
-$descripcion = $data['descripcion'];
+$nombre      = $conn->real_escape_string($data['nombre']);
+$precio      = floatval($data['precio']);
+$stock       = intval($data['stock']);
+$estado      = intval($data['estado']);
+$descripcion = $conn->real_escape_string($data['descripcion'] ?? '');
 
-$stmt = $conn->prepare("INSERT INTO productos(nombre,precio,stock,descripcion,estado)
-VALUES(?,?,?,?,1)");
+$sql = "INSERT INTO productos (nombre, precio, stock, estado, descripcion)
+        VALUES ('$nombre', $precio, $stock, $estado, '$descripcion')";
 
-$stmt->bind_param("sdis",$nombre,$precio,$stock,$descripcion);
-
-$stmt->execute();
-
-echo json_encode(["mensaje"=>"ok"]);
+if($conn->query($sql)){
+    echo json_encode(["success" => true]);
+} else {
+    echo json_encode(["success" => false, "message" => $conn->error]);
+}

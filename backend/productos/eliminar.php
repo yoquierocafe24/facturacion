@@ -1,21 +1,15 @@
 <?php
-include "../config/conexion.php";
+include "../../backend/config/conexion.php";
+header("Content-Type: application/json");
 
-// Recibir datos JSON
 $data = json_decode(file_get_contents("php://input"), true);
+$id   = intval($data['id_producto']);
 
-if(!isset($data['id_producto'])){
-    echo json_encode(['success'=>false, 'error'=>'ID no proporcionado']);
-    exit;
-}
+// Desactivar en vez de eliminar físicamente
+$sql = "UPDATE productos SET estado = 0 WHERE id_producto = $id";
 
-$id = intval($data['id_producto']);
-
-$query = $conn->query("DELETE FROM productos WHERE id_producto = $id");
-
-if($query){
-    echo json_encode(['success'=>true]);
+if($conn->query($sql)){
+    echo json_encode(["success" => true]);
 } else {
-    echo json_encode(['success'=>false, 'error'=>$conn->error]);
+    echo json_encode(["success" => false, "message" => $conn->error]);
 }
-?>

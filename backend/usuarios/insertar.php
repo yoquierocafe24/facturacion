@@ -30,7 +30,7 @@ if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&\.#\-_,;:]).{8,}$/
 
 $password = password_hash($passwordOriginal, PASSWORD_DEFAULT);
 
-// 1️⃣ ¿Existe activo?
+//¿Existe activo?
 $checkActivo = $conn->prepare("SELECT id_usuario FROM usuarios WHERE usuario = ? AND estado = 1");
 $checkActivo->bind_param("s", $usuario);
 $checkActivo->execute();
@@ -39,7 +39,7 @@ if($checkActivo->get_result()->num_rows > 0){
     exit;
 }
 
-// 2️⃣ ¿Existe inactivo? → reactivar
+//  ¿Existe inactivo?  reactivar
 $checkInactivo = $conn->prepare("SELECT id_usuario FROM usuarios WHERE usuario = ? AND estado = 0");
 $checkInactivo->bind_param("s", $usuario);
 $checkInactivo->execute();
@@ -58,7 +58,7 @@ if($resultInactivo->num_rows > 0){
     exit;
 }
 
-// 3️⃣ No existe → INSERT
+//  No existe → INSERT
 $stmt = $conn->prepare("INSERT INTO usuarios (nombre, usuario, password, id_rol, estado) VALUES (?, ?, ?, ?, 1)");
 $stmt->bind_param("sssi", $nombre, $usuario, $password, $id_rol);
 

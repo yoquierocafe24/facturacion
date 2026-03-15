@@ -1,28 +1,22 @@
 <?php
-include "../config/conexion.php";
+include "../../backend/config/conexion.php";
+header("Content-Type: application/json");
 
 $data = json_decode(file_get_contents("php://input"), true);
 
-if(!isset($data['id_producto'])){
-    echo json_encode(['success'=>false, 'error'=>'ID no proporcionado']);
-    exit;
-}
+$id          = intval($data['id_producto']);
+$nombre      = $conn->real_escape_string($data['nombre']);
+$precio      = floatval($data['precio']);
+$stock       = intval($data['stock']);
+$estado      = intval($data['estado']);
+$descripcion = $conn->real_escape_string($data['descripcion'] ?? '');
 
-$id = intval($data['id_producto']);
-$nombre = $conn->real_escape_string($data['nombre']);
-$precio = floatval($data['precio']);
-$stock = intval($data['stock']);
-$descripcion = $conn->real_escape_string($data['descripcion']);
+$sql = "UPDATE productos 
+        SET nombre='$nombre', precio=$precio, stock=$stock, estado=$estado, descripcion='$descripcion'
+        WHERE id_producto=$id";
 
-$query = $conn->query("
-    UPDATE productos 
-    SET nombre='$nombre', precio=$precio, stock=$stock, descripcion='$descripcion'
-    WHERE id_producto=$id
-");
-
-if($query){
-    echo json_encode(['success'=>true]);
+if($conn->query($sql)){
+    echo json_encode(["success" => true]);
 } else {
-    echo json_encode(['success'=>false, 'error'=>$conn->error]);
+    echo json_encode(["success" => false, "message" => $conn->error]);
 }
-?>

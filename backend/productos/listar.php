@@ -1,18 +1,13 @@
 <?php
+include "../../backend/config/conexion.php";
+header("Content-Type: application/json");
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+$sql = "SELECT * FROM productos ORDER BY id_producto DESC";
+$res = $conn->query($sql);
 
-include "../config/conexion.php";
-
-$result = $conn->query("SELECT * FROM productos WHERE estado=1");
-
-$productos = [];
-
-while($row = $result->fetch_assoc()){
-
-$productos[] = $row;
-
+$data = [];
+while($row = $res->fetch_assoc()){
+    $data[] = $row;
 }
 
-echo json_encode($productos);
+echo json_encode($data);

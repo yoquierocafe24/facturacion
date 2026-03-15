@@ -11,44 +11,67 @@ if(!$data){
     exit;
 }
 
-$nombre = $data['nombre'];
-$cedula = $data['cedula'];
-$telefono = $data['telefono'];
-$email = $data['email'];
-$direccion = $data['direccion'];
-$rtn = isset($data['rtn']) ? $data['rtn'] : ""; 
+$nombre    = trim($data['nombre']    ?? '');
+$cedula    = trim($data['cedula']    ?? '');
+$telefono  = trim($data['telefono'] ?? '');
+$email     = trim($data['email']    ?? '');
+$direccion = trim($data['direccion'] ?? '');
+$rtn       = trim($data['rtn']      ?? '');
 
-//  Revisar si ya existe cliente por cédula o R.T.N
-$stmt = $conn->prepare("SELECT id_cliente, estado FROM clientes WHERE cedula = ? OR rtn = ?");
-$stmt->bind_param("ss", $cedula, $rtn);
-$stmt->execute();
-$result = $stmt->get_result();
-
-if($cliente = $result->fetch_assoc()){
-    if($cliente['estado'] == 0){
-        // Cliente existe pero estaba inactivo → reactivarlo y actualizar datos
-        $stmt = $conn->prepare("UPDATE clientes SET nombre=?, telefono=?, email=?, direccion=?, rtn=?, estado=1 WHERE id_cliente=?");
-        $stmt->bind_param("sssssi", $nombre, $telefono, $email, $direccion, $rtn, $cliente['id_cliente']);
-        if($stmt->execute()){
-            echo json_encode(["mensaje" => "Cliente reactivado y actualizado"]);
-        } else {
-            echo json_encode(["error" => "Error al reactivar cliente"]);
-        }
-    } else {
-        //  Cliente ya existe activo → no duplicar
-        echo json_encode(["error" => "El cliente ya existe"]);
-    }
-} else {
-    // Cliente no existe → insertar normalmente
-    $stmt = $conn->prepare("INSERT INTO clientes (nombre, cedula, telefono, email, direccion, rtn, estado) VALUES (?, ?, ?, ?, ?, ?, 1)");
-    $stmt->bind_param("ssssss", $nombre, $cedula, $telefono, $email, $direccion, $rtn);
-    if ($stmt->execute()) {
-        echo json_encode(["mensaje" => "Cliente creado"]);
-    } else {
-        echo json_encode(["error" => "Error al crear cliente"]);
-    }
+if(!$nombre){
+    echo json_encode(["error" => "El nombre es obligatorio"]);
+    exit;
 }
 
+// Función para buscar cliente por un campo 
+function buscarCliente($conn, $campo, $valor){
+    $stmt = $conn->prepare("SELECT id_cliente, estado FROM clientes WHERE $campo = ?");
+    $stmt->bind_param("s", $valor);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result->fetch_assoc();
+}
 
+// Verificar duplicados por cédula, teléfono, email o RTN 
+$clienteExistente = null;
 
+if($cedula !== ''){
+    $clienteExistente = buscarCliente($conn, 'cedula', $cedula);
+}
+if(!$clienteExistente && $telefono !== ''){
+    $clienteExistente = buscarCliente($conn, 'telefono', $telefono);
+}
+if(!$clienteExistente && $email !== ''){
+    $clienteExistente = buscarCliente($conn, 'email', $email);
+}
+if(!$clienteExistente && $rtn !== ''){
+    $clienteExistente = buscarCliente($conn, 'rtn', $rtn);
+}
+
+if($clienteExistente){
+    if($clienteExistente['estado'] == 0){
+        // Cliente eliminado  reactivar y actualizar datos
+        $stmt = $conn->prepare("UPDATE clientes SET nombre=?, cedula=?, telefono=?, email=?, direccion=?, rtn=?, estado=1 WHERE id_cliente=?");
+        $stmt->bind_param("ssssssi", $nombre, $cedula, $telefono, $email, $direccion, $rtn, $clienteExistente['id_cliente']);
+        if($stmt->execute()){
+            echo json_encode(["mensaje" => "Cliente reactivado nuevamente"]);
+        } else {
+            echo json_encode(["error" => "Error al reactivar: " . $conn->error]);
+        }
+    } else {
+        // Cliente activo  no duplicar
+        echo json_encode(["error" => "Ya existe un cliente activo con esos datos"]);
+    }
+    exit;
+}
+
+//  No existe insertar nuevo 
+$stmt = $conn->prepare("INSERT INTO clientes (nombre, cedula, telefono, email, direccion, rtn, estado) VALUES (?, ?, ?, ?, ?, ?, 1)");
+$stmt->bind_param("ssssss", $nombre, $cedula, $telefono, $email, $direccion, $rtn);
+
+if($stmt->execute()){
+    echo json_encode(["mensaje" => "Cliente guardado con éxito"]);
+} else {
+    echo json_encode(["error" => "Error al guardar: " . $conn->error]);
+}
 ?>
