@@ -392,7 +392,7 @@ fetch("../backend/dashboard/deudores.php")
             <tr><td colspan="4">
                 <div class="empty-state">
                     <div class="empty-icon"></div>
-                    <p style="font-weight:600;color:var(--success);">Sin facturas pendientes</p>
+                 <p style="font-weight:600;color:#0d3b66;">Sin facturas pendientes</p>
                 </div>
             </td></tr>`;
         return;

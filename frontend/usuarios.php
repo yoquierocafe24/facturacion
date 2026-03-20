@@ -351,8 +351,8 @@ if($_SESSION['rol'] != "Administrador"){
                 <label>Rol</label>
                 <select id="id_rol">
                     <option value="">Seleccione un rol</option>
-                    <option value="5">Administrador</option>
-                    <option value="6">Trabajador</option>
+                    <option value="1">Administrador</option>
+                    <option value="2">Trabajador</option>
                 </select>
             </div>
         </div>

@@ -323,7 +323,7 @@ if($_SESSION['rol'] !== "Administrador" && $_SESSION['rol'] !== "Trabajador"){
             <div class="form-group">
                 <label>Estado de Pago</label>
                 <select id="estado_pago">
-                    <option value="Pagado"> Pagado</option>
+                    <option value="Pagado"> Al Contado</option>
                     <option value="Pendiente">Crédito</option>
                 </select>
             </div>
@@ -429,7 +429,7 @@ fetch("../backend/clientes/listar.php")
 });
 
 // ── Cargar productos ──────────────────────────────────────────────────────────
-fetch("../backend/productos/listar.php")
+fetch("../backend/productos/listararchivo.php")
 .then(res => res.json())
 .then(data => {
     let select = document.getElementById("producto");
@@ -437,7 +437,7 @@ fetch("../backend/productos/listar.php")
         select.innerHTML += `<option value="${p.id_producto}"
             data-precio="${p.precio}"
             data-descripcion="${p.descripcion}">
-            ${p.nombre}
+            ${p.nombre} - ${p.descripcion}
         </option>`;
     });
 });

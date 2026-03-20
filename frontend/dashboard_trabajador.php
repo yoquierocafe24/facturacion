@@ -209,7 +209,7 @@ if($_SESSION['rol'] !== "Trabajador"){
             text-align: center; padding: 2.5rem; color: var(--muted);
         }
         .empty-creditos .icon { font-size: 2rem; margin-bottom: .5rem; }
-        .empty-creditos p { font-size: .88rem; font-weight: 600; color: var(--success); }
+        .empty-creditos p { font-size: .88rem; font-weight: 600; color: #0d3b66; }
 
         /* ── TOAST ── */
         .toast-wrap {

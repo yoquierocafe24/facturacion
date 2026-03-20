@@ -30,10 +30,12 @@ try {
     $res     = $conn->query("SELECT * FROM empresa LIMIT 1");
     $empresa = $res->fetch_assoc();
 
-    if($empresa['numero_actual'] > $empresa['rango_final']){
-        throw new Exception("Rango fiscal vencido");
-    }
+ // Extraer el número del rango final (los últimos 8 dígitos)
+$rangoFinalNum = (int) substr($empresa['rango_final'], strrpos($empresa['rango_final'], '-') + 1);
 
+if($empresa['numero_actual'] > $rangoFinalNum){
+    throw new Exception("Rango fiscal vencido");
+}
     $correlativo   = str_pad($empresa['numero_actual'], 8, "0", STR_PAD_LEFT);
     $numeroFactura = $empresa['establecimiento'] . "-" .
                      $empresa['punto_emision']   . "-" .

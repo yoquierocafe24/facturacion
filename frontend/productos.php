@@ -510,14 +510,14 @@ if($_SESSION['rol'] !== "Administrador" && $_SESSION['rol'] !== "Trabajador"){
         <li class="nav-item">
             <a class="nav-link" href="facturar.php">🧾 Facturas</a>
         </li>
+        <?php if($_SESSION['rol'] == "Administrador"): ?>
         <li class="nav-item">
             <a class="nav-link" href="historial_facturas.php">📋 Historial</a>
         </li>
-        <?php if($_SESSION['rol'] == "Administrador"){ ?>
         <li class="nav-item">
             <a class="nav-link" href="usuarios.php">👤 Usuarios</a>
         </li>
-        <?php } ?>
+        <?php endif ; ?>
         <li class="nav-item mt-auto">
             <a class="nav-link logout" href="../backend/auth/logout.php">🚪 Cerrar sesión</a>
         </li>

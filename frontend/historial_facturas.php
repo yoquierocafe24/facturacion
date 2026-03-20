@@ -421,10 +421,10 @@ function marcarPagado(id_factura, btn) {
             const fila  = btn.closest("tr");
             const badge = fila.querySelector(".estado-badge");
             badge.className = "estado-badge badge-pagado";
-            badge.innerHTML = "✅ Pagado";
+            badge.innerHTML = "Pagado";
             // Quitar botón
             btn.remove();
-            toast("Factura marcada como pagada ✓", "success");
+            toast("Factura marcada como pagada ", "success");
         } else {
             toast("Error: " + data.error, "error");
         }
