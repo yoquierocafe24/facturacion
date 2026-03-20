@@ -482,8 +482,8 @@ function renderTabla(data) {
             </td>
             <td>${u.nombre}</td>
             <td>
-                <span class="rol-badge ${u.id_rol == 5 ? 'rol-admin' : 'rol-worker'}">
-                    ${u.id_rol == 5 ? 'Administrador' : 'Trabajador'}
+                <span class="rol-badge ${u.id_rol == 1 ? 'rol-admin' : 'rol-worker'}">
+                    ${u.id_rol == 1 ? 'Administrador' : 'Trabajador'}
                 </span>
             </td>
             <td>

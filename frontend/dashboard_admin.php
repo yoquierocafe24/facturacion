@@ -279,7 +279,6 @@ if($_SESSION['rol'] !== "Administrador"){
         <div class="chart-header">
             <div>
                 <div class="chart-title">Resumen de Ventas</div>
-                <div class="chart-subtitle">Últimos 6 meses</div>
             </div>
             <div class="chart-legend">
                 <span class="dot"></span> Ventas (L)

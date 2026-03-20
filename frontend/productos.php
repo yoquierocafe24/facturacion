@@ -766,7 +766,7 @@ function guardarProducto() {
     .then(r => r.json())
     .then(data => {
         if (data.success) {
-            toast(id ? "Producto actualizado ✓" : "Producto guardado ✓", "success");
+            toast(id ? "Producto actualizado " : "Producto guardado ", "success");
             cerrarForm();
             cargarProductos();
         } else {
@@ -796,7 +796,7 @@ function confirmarEliminar() {
     .then(data => {
         cerrarConfirm();
         if (data.success) {
-            toast("Producto desactivado ✓", "success");
+            toast("Producto desactivado ", "success");
             cargarProductos();
         } else {
             toast(data.message || "Error al desactivar", "error");
